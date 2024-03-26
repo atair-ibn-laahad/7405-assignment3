@@ -20,7 +20,6 @@ mc_method = 'geometric'
 
 def geometricc(S1, S2, sigma1, sigma2, r, T, K, p, option_type, print_func=True):
     # Calculate constants for the geometric Asian option
-
     sigma_Bg = np.sqrt(sigma1 ** 2 + sigma2 ** 2 + 2 * sigma1 * sigma2 * p) / 2
     u_Bg = r - (sigma1 ** 2 + sigma2 ** 2) / 4 + sigma_Bg ** 2 / 2
     Bg0 = np.sqrt(S1 * S2)
@@ -39,7 +38,7 @@ def geometricc(S1, S2, sigma1, sigma2, r, T, K, p, option_type, print_func=True)
     return geo
 
 
-def arithmetic(S1, S2, K, sigma1, sigma2, p, option_type, M, mc_method):
+def arithmetic(S1, S2, K, N, sigma1, sigma2, p, option_type, M, mc_method):
     delta = T / N
     geo = geometricc(S1, S2, sigma1, sigma2, r, T, K, p, option_type, print_func=False)
     # Initialize payoff arrays
@@ -85,4 +84,4 @@ def arithmetic(S1, S2, K, sigma1, sigma2, p, option_type, M, mc_method):
 
 
 if __name__ == "__main__":
-    arithmetic(S1, S2, K, sigma1, sigma2, p, option_type, M, mc_method)
+    arithmetic(S1, S2, K, N, sigma1, sigma2, p, option_type, M, mc_method)
