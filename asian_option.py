@@ -15,7 +15,7 @@ M = 10000  # Number of simulations
 mc_method = 'geometric'
 
 
-def geometric(S, sigma, r, T, K, N, option_type):
+def geometric(S, sigma, r, T, K, N, option_type, print_func=True):
     # Calculate constants for the geometric Asian option
     sigma_C = sigma * np.sqrt((N + 1) * (2 * N + 1) / (6 * N ** 2))
     u = (r - 0.5 * sigma ** 2) * (N + 1) / (2 * N) + 0.5 * sigma_C ** 2
@@ -29,13 +29,14 @@ def geometric(S, sigma, r, T, K, N, option_type):
         geo = np.exp(-r * T) * (K * norm.cdf(-d2) - S * np.exp(u * T) * norm.cdf(-d1))
     else:
         raise ValueError('Unable to identify options type')
-    print(f"Geometric Asian option:{geo}")
+    if print_func:
+        print(f"Geometric Asian option:{geo}")
     return geo
 
 
 def arithmetic(S, sigma, r, T, K, N, option_type, M, mc_method):
     delta = T / N  # Time step size
-    geo = geometric(S, sigma, r, T, K, N, option_type)
+    geo = geometric(S, sigma, r, T, K, N, option_type, print_func=False)
     # Initialize payoff arrays
     arithPayoff = np.zeros(M)
     geoPayoff = np.zeros(M)

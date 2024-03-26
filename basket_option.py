@@ -18,7 +18,7 @@ option_type = 'call'
 mc_method = 'geometric'
 
 
-def geometricc(S1, S2, sigma1, sigma2, r, T, K, p, option_type):
+def geometricc(S1, S2, sigma1, sigma2, r, T, K, p, option_type, print_func=True):
     # Calculate constants for the geometric Asian option
 
     sigma_Bg = np.sqrt(sigma1 ** 2 + sigma2 ** 2 + 2 * sigma1 * sigma2 * p) / 2
@@ -34,13 +34,14 @@ def geometricc(S1, S2, sigma1, sigma2, r, T, K, p, option_type):
         geo = np.exp(-r * T) * (K * norm.cdf(-d2) - Bg0 * np.exp(u_Bg * T) * norm.cdf(-d1))
     else:
         raise ValueError('Unable to identify options type')
-    print(f"Geometric basket option:{geo}")
+    if print_func:
+        print(f"Geometric basket option:{geo}")
     return geo
 
 
 def arithmetic(S1, S2, K, sigma1, sigma2, p, option_type, M, mc_method):
     delta = T / N
-    geo = geometricc(S1, S2, sigma1, sigma2, r, T, K, p, option_type)
+    geo = geometricc(S1, S2, sigma1, sigma2, r, T, K, p, option_type, print_func=False)
     # Initialize payoff arrays
     arithPayoff = np.zeros(M)
     geoPayoff = np.zeros(M)
