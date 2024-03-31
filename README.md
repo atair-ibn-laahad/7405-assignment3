@@ -12,7 +12,7 @@ The UI set will automatically accept the newly implemented methods and display i
 ## Run the project
 Create a new virtual environment, or use an existing one, install all necessary requirements.
 And then you can choose:
-1. Build / [download](https://github.com/Xrondev/HKU7405-optionPricer-UI) the GUI program, place it under `./GUI/` 
+1. Build / [download](https://github.com/Xrondev/HKU7405-optionPricer-UI) the GUI program, place the exe/AppImage/dmg file (others is not necessary) under `./GUI/` 
 and then run the `main.py`
 2. run the different method by importing them to `test.py`
 3. run the `api_entries.py` to start a local/remote server, and use `requests` or a browser to invoke the methods. The
