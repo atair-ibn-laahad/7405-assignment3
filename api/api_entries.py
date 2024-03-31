@@ -10,6 +10,7 @@ from tasks.basket_option import geometric as basket_geometric  # task 3 geometri
 from tasks.asian_option import arithmetic as closed_asian_arithmetic  # task 4
 from tasks.basket_option import arithmetic as basket_arithmetic  # task 5
 from tasks.kiko_put_option import mc as kiko  # task 6
+from tasks.binomial_tree import binomial_tree_american_option  # task 7
 
 app = FastAPI()
 app.add_middleware(
@@ -30,14 +31,20 @@ function_map = {
     "closed_arithmetic_asian": {"display_name": "Closed-form formula for arithmetic Asian Options",
                                 "function": closed_asian_arithmetic},
     "basket_arithmetic_asian": {"display_name": "Arithmetic Basket Asian Options", "function": basket_arithmetic},
-    "kiko": {"display_name": "KIKO Put Option", "function": kiko}
-
+    "kiko": {"display_name": "KIKO Put Option", "function": kiko},
+    "binomial_tree": {"display_name": "Binomial Tree for American Options", "function": binomial_tree_american_option}
 
 }
 
 
-# Modified Custom Dependency
 def dynamic_parameters(function_name: str, request: Request):
+    """
+    This function used for recognizing the function and its parameters, and then execute the function with the parameters
+
+    :param function_name: should be given in function_map
+    :param request: FastAPI Request object
+    :return:
+    """
     if function_name in function_map:
         target_function = function_map[function_name]["function"]
         signature = inspect.signature(target_function)
@@ -54,9 +61,14 @@ def dynamic_parameters(function_name: str, request: Request):
         raise HTTPException(status_code=404, detail="Function not found")
 
 
-# Modified Route
 @app.get("/calc/{function_name}")
 async def dynamic_route(execute: Callable = Depends(dynamic_parameters)):
+    """
+    dynamic routing, when a new function is implemented, add it to the function_map and it will be available in the API
+
+    :param execute:
+    :return:
+    """
     try:
         result = execute()
         return {"result": result}
@@ -66,6 +78,11 @@ async def dynamic_route(execute: Callable = Depends(dynamic_parameters)):
 
 @app.get("/", name="routes")
 def return_all_routes():
+    """
+    Return all routes and their parameters to the UI
+
+    :return:
+    """
     # return the url and display name and param list to UI
     result = {}
     for url, data in function_map.items():
