@@ -1,6 +1,4 @@
-import asian_option
-import basket_option
-import kiko_put_option
+from tasks import asian_option, basket_option, kiko_put_option
 
 # Asian option variable
 S = 100  # Current stock price
@@ -29,7 +27,7 @@ sigma2 = 0.3
 p = 0.5
 option_type = 'call'
 mc_method = 'geometric'
-basket_option.geometricc(S1, S2, sigma1, sigma2, r, T, K, p, option_type)
+basket_option.geometric(S1, S2, sigma1, sigma2, r, T, K, p, option_type)
 basket_option.arithmetic(S1, S2, K, N, sigma1, sigma2, p, option_type, M, mc_method)
 
 
