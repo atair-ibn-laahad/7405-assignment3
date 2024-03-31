@@ -1,45 +1,63 @@
-from tasks import asian_option, basket_option, kiko_put_option
-
-# Asian option variable
-S = 100  # Current stock price
-sigma = 0.2  # Volatility
-r = 0.05  # Risk-free rate
-T = 3  # Time to maturity
-K = 90  # Strike price
-N = 252  # Number of time steps
-option_type = 'call'
-M = 10000  # Number of simulations
-mc_method = 'geometric'
-asian_option.geometric(S, sigma, r, T, K, N, option_type)
-asian_option.arithmetic(S, sigma, r, T, K, N, option_type, M, mc_method)
+import os
+import subprocess
+import sys
+import platform
+import glob
 
 
-# basket option variable
-r = 0.05  # Risk-free rate
-T = 3  # Time to maturity
-M = 10000  # Number of simulations
-N = 50  # Number of time steps
-S1 = 100
-S2 = 100
-K = 90
-sigma1 = 0.3
-sigma2 = 0.3
-p = 0.5
-option_type = 'call'
-mc_method = 'geometric'
-basket_option.geometric(S1, S2, sigma1, sigma2, r, T, K, p, option_type)
-basket_option.arithmetic(S1, S2, K, N, sigma1, sigma2, p, option_type, M, mc_method)
+def find_gui_file(extension):
+    files = glob.glob(os.path.join('./GUI', f'*{extension}'))
+    return files[0] if files else None
 
 
-# KIKO option parameter
-M = 2 ** 10
-S = 100
-sigma = 0.2
-r = 0.05
-T = 3
-K = 90
-L = 80
-U = 125
-N = 252
-R = 1.5
-kiko_put_option.mc(S, sigma, r, T, K, L, U, N, R)
+def start_fastapi():
+    # Start the FastAPI server and return the process
+    return subprocess.Popen(['uvicorn', 'api.api_entries:app', '--host', '0.0.0.0', '--port', '7405'])
+
+
+def start_electron():
+    os_type = platform.system()
+    gui_file_extensions = {
+        "Linux": ".AppImage",
+        "Windows": ".exe",
+        "Darwin": ".app"
+    }
+    extension = gui_file_extensions.get(os_type)
+
+    if extension:
+        gui_file = find_gui_file(extension)
+        if gui_file:
+            try:
+                print(f"Starting Electron app: {gui_file}")
+
+                if os_type == "Linux" or os_type == "Windows":
+
+                    process = subprocess.Popen([gui_file], stderr=subprocess.PIPE)
+                elif os_type == "Darwin":
+                    process = subprocess.Popen(['open', gui_file], stderr=subprocess.PIPE)
+
+                _, errors = process.communicate()
+                if errors:
+                    print(f"Error: {errors.decode()}")
+                return process
+            except Exception as e:
+                print(f"Failed to start Electron app: {e}")
+                sys.exit(1)
+        else:
+            print("GUI file not found. Cannot start Electron app.")
+            sys.exit(1)
+    else:
+        print("Unsupported OS")
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    print("Starting might be slow. If you find any problem starting the whole project, try to start"
+          " the server and GUI manually by running the ./api/api_entries.py"
+          " and start the GUI program manually")
+    fastapi_process = start_fastapi()
+
+    electron_process = start_electron()
+    electron_process.wait()
+
+    fastapi_process.terminate()
