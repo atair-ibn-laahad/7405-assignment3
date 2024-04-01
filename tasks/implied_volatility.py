@@ -5,7 +5,7 @@ from scipy.stats import norm
 from tasks.black_scholes_european import black_scholes_european_options
 
 
-def implied_volatility(s_0: float, r: float, q: float, T: float, K: float, option_premium: float, option_type: str, max_iter=500):
+def implied_volatility(s_0: float, r: float, q: float, T: float, K: float, option_premium: float, option_type: str, max_iter: int=500):
     """
     Calculate implied volatility for European call/put options using Black-Scholes formulas.
 
