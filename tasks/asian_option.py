@@ -15,7 +15,19 @@ M = 10000  # Number of simulations
 mc_method = 'geometric'
 
 
-def geometric(S: float, sigma: float, r: float, T: float, K: float, N: float, option_type: str = 'call'):
+def geometric(S: float, sigma: float, r: float, T: float, K: float, N: int, option_type: str = 'call'):
+    """
+    Calculate the price of a geometric Asian option.
+
+    :param S: the spot price of asset S(0)
+    :param sigma: volatility
+    :param r: risk-free interest rate
+    :param T: time to maturity in years
+    :param K: strike price
+    :param N: number of observation times for the geometric average
+    :param option_type: call or put
+    :return:
+    """
     # Calculate constants for the geometric Asian option
     sigma_C = sigma * np.sqrt((N + 1) * (2 * N + 1) / (6 * N ** 2))
     u = (r - 0.5 * sigma ** 2) * (N + 1) / (2 * N) + 0.5 * sigma_C ** 2
@@ -36,6 +48,20 @@ def geometric(S: float, sigma: float, r: float, T: float, K: float, N: float, op
 
 def arithmetic(S: float, sigma: float, r: float, T: float, K: float, N: float, option_type: str, M: int,
                mc_method: str):
+    """
+    Calculate the price of an arithmetic Asian option.
+
+    :param S: the spot price of asset S(0)
+    :param sigma: volatility
+    :param r: risk-free interest rate
+    :param T: time to maturity in years
+    :param K: strike price
+    :param N: number of observation times for the geometric average
+    :param option_type: call or put
+    :param M: number of passes in the Monte Carlo simulation
+    :param mc_method: None(no control variate) or geometric
+    :return:
+    """
     delta = T / N  # Time step size
     geo = geometric(S, sigma, r, T, K, N, option_type)
     # Initialize payoff arrays
@@ -67,7 +93,7 @@ def arithmetic(S: float, sigma: float, r: float, T: float, K: float, N: float, o
     Z = arithPayoff + theta * (geo - geoPayoff)
     Zmean = np.mean(Z)
     Zstd = np.std(Z)
-    if mc_method == 'None':
+    if mc_method == 'None' or mc_method == 'none' or mc_method == 'no control variate':
         ari = [Pmean - 1.96 * Pstd / np.sqrt(M), Pmean + 1.96 * Pstd / np.sqrt(M)]
     elif mc_method == 'geometric':
         ari = [Zmean - 1.96 * Zstd / np.sqrt(M), Zmean + 1.96 * Zstd / np.sqrt(M)]

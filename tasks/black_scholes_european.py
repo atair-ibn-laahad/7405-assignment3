@@ -5,7 +5,7 @@ from scipy.stats import norm
 
 def black_scholes_european_options(s_0: float, sigma: float, r: float, q: float, T: float, K: float, option_type: str):
     """
-    Implement Black-Scholes Formulas for European call/put options.
+    calculate Black-Scholes Formulas for European call/put options.
 
     :param s_0: spot price of asset S(0)
     :param sigma: volatility

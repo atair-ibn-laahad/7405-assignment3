@@ -18,6 +18,20 @@ N = 252
 R = 1.5
 
 def mc(S:float, sigma:float, r:float, T:float, K:float, L:float, U:float, N:int, R:float):
+    """
+    Quasi-Monte Carlo method for a KIKO put option. Return the price and the Delta of the option.
+
+    :param S: the spot price of asset S(0)
+    :param sigma: volatility
+    :param r: risk-free interest rate
+    :param T: time to maturity in years
+    :param K: strike price
+    :param L: lower barrier
+    :param U: upper barrier
+    :param N: number of observation times for the geometric average
+    :param R: cash rebate
+    :return:
+    """
     # set the random seed
     seed = 1000
     np.random.seed(1000)
@@ -54,7 +68,8 @@ def mc(S:float, sigma:float, r:float, T:float, K:float, L:float, U:float, N:int,
     Kstd = np.std(values)
     confkv = [Kmean - 1.96 * Kstd / np.sqrt(M), Kmean + 1.96 * Kstd / np.sqrt(M)]
     print(f"KIKO put option:{confkv}")
-    return confkv
+    # TODO: calculate the Delta?
+    return {"price interval": confkv, "delta": None}
 
 if __name__ == "__main__":
     mc(S, sigma, r, T, K, L, U, N, R)
