@@ -39,8 +39,9 @@ def geometric(S1: float, S2: float, sigma1: float, sigma2: float, r: float, T: f
     return geo
 
 
-def arithmetic(S1: float, S2: float, K: float, N: float, sigma1: float, sigma2: float, p: float, option_type: str,
+def arithmetic(S1: float, S2: float, K: float, N: int, sigma1: float, sigma2: float, p: float, option_type: str,
                M: int, mc_method: str):
+    print(S1, S2, K, N, sigma1, sigma2, p, option_type, M, mc_method)
     delta = T / N
     geo = geometric(S1, S2, sigma1, sigma2, r, T, K, p, option_type)
     # Initialize payoff arrays
