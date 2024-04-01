@@ -54,8 +54,10 @@ def dynamic_parameters(function_name: str, request: Request):
             param_value = request.query_params.get(name)
             if param_value is not None:
                 # Convert param_value to the correct type, handle exceptions as needed
-                parameters[name] = parameter.annotation(param_value)
-
+                try:
+                    parameters[name] = parameter.annotation(param_value)
+                except ValueError:
+                    raise HTTPException(status_code=400, detail=f"Invalid value for parameter {name}")
         return lambda: target_function(**parameters)
     else:
         raise HTTPException(status_code=404, detail="Function not found")
@@ -72,8 +74,11 @@ async def dynamic_route(execute: Callable = Depends(dynamic_parameters)):
     try:
         result = execute()
         return {"result": result}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     except TypeError as e:
         raise HTTPException(status_code=400, detail=str(e))
+
 
 
 @app.get("/", name="routes")
