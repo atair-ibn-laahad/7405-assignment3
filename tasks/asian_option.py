@@ -46,7 +46,7 @@ def geometric(S: float, sigma: float, r: float, T: float, K: float, N: int, opti
     return geo
 
 
-def arithmetic(S: float, sigma: float, r: float, T: float, K: float, N: float, option_type: str, M: int,
+def arithmetic(S: float, sigma: float, r: float, T: float, K: float, N: int, option_type: str, M: int,
                mc_method: str):
     """
     Calculate the price of an arithmetic Asian option.

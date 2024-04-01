@@ -68,8 +68,9 @@ def mc(S:float, sigma:float, r:float, T:float, K:float, L:float, U:float, N:int,
     Kstd = np.std(values)
     confkv = [Kmean - 1.96 * Kstd / np.sqrt(M), Kmean + 1.96 * Kstd / np.sqrt(M)]
     print(f"KIKO put option:{confkv}")
-    # TODO: calculate the Delta?
-    return {"price interval": confkv, "delta": None}
+
+    delta = Kmean / S
+    return {"price interval": confkv, "delta": delta}
 
 if __name__ == "__main__":
     mc(S, sigma, r, T, K, L, U, N, R)
